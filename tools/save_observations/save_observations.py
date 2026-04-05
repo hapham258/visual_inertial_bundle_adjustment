@@ -307,25 +307,31 @@ def run_pipeline(
 
     # save sensor layout
     layout_output = output_path / "vrs_source_info.json"
-    T_device_imu0 = save_sensor_layout(mps_online_calibration, layout_output)
+    if layout_output.exists():
+        print(f"Skipping sensor layout (already exists): {layout_output}")
+    else:
+        T_device_imu0 = save_sensor_layout(mps_online_calibration, layout_output)
 
     # convert to CVG format, to run pipeline
     estimate = output_path / "estimated_trajectory.txt"
-    if trajectory_type == "closed_loop":
-        mps_closed_loop_trajectory = (
-            mps_path / "closed_loop_trajectory.csv"
-        )
-        convert_closed_loop_trajectory(
-            mps_closed_loop_trajectory, T_device_imu0, estimate
-        )
+    if estimate.exists():
+        print(f"Skipping trajectory export (already exists): {estimate}")
     else:
-        mps_open_loop_trajectory = mps_path / "open_loop_trajectory.csv"
-        convert_open_loop_trajectory(
-            mps_open_loop_trajectory,
-            mps_online_calibration,
-            T_device_imu0,
-            estimate,
-        )
+        if trajectory_type == "closed_loop":
+            mps_closed_loop_trajectory = (
+                mps_path / "closed_loop_trajectory.csv"
+            )
+            convert_closed_loop_trajectory(
+                mps_closed_loop_trajectory, T_device_imu0, estimate
+            )
+        else:
+            mps_open_loop_trajectory = mps_path / "open_loop_trajectory.csv"
+            convert_open_loop_trajectory(
+                mps_open_loop_trajectory,
+                mps_online_calibration,
+                T_device_imu0,
+                estimate,
+            )
 
     if not output_path.exists():
         output_path.mkdir(parents=True, exist_ok=True)

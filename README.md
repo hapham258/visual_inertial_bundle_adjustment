@@ -1,3 +1,24 @@
+Build C++ code:
+```
+git submodule update --init --recursive
+wget https://github.com/Kitware/CMake/releases/download/v3.28.3/cmake-3.28.3-linux-x86_64.sh
+chmod +x cmake-3.28.3-linux-x86_64.sh
+./cmake-3.28.3-linux-x86_64.sh --skip-license --prefix=$HOME/.local
+export PATH=$HOME/.local/bin:$PATH
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+cmake --build build -- -j16
+ctest --test-dir build
+```
+Setup Conda environment:
+```
+conda create -n viba_all python=3.10 -y
+conda activate viba_all
+conda install -c conda-forge vrs
+cd tools/save_observations
+pip install -r requirements.txt
+cd ../../
+```
+
 [![CI](https://github.com/facebookresearch/visual_inertial_bundle_adjustment/actions/workflows/ci.yml/badge.svg)](https://github.com/facebookresearch/visual_inertial_bundle_adjustment/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/facebookresearch/visual_inertial_bundle_adjustment/blob/main/LICENSE)
 [![C++](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)

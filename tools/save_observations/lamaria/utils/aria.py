@@ -205,6 +205,9 @@ def extract_images_from_vrs(
         (right_subfolder_name, RIGHT_CAMERA_STREAM_ID),
     ]:
         output_dir = image_folder / camera
+        if output_dir.exists() and any(output_dir.iterdir()):
+            logger.info("Skipping extraction for %s (already exists)", camera)
+            continue
         output_dir.mkdir(parents=True, exist_ok=True)
         shutil.rmtree(output_dir)
 
