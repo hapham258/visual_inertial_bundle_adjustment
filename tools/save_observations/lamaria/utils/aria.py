@@ -1,5 +1,6 @@
 import shutil
 import subprocess
+import json
 from pathlib import Path
 
 import numpy as np
@@ -193,6 +194,81 @@ def initialize_reconstruction_from_vrs_file(
     return recon
 
 
+def initialize_reconstruction_from_calib_file(
+    factory_calib: Path
+) -> pycolmap.Reconstruction:
+    """
+    Initialize a pycolmap.Reconstruction from calibration JSON file.
+    """
+
+    with open(factory_calib, "r") as f:
+        calib = json.load(f)
+
+    recon = pycolmap.Reconstruction()
+    rig = pycolmap.Rig(rig_id=1)
+
+    # --- IMU as reference sensor ---
+    imu = pycolmap.Camera(
+        camera_id=1,
+        model="SIMPLE_PINHOLE",
+        params=[0, 0, 0],
+    )
+    recon.add_camera(imu)
+    rig.add_ref_sensor(imu.sensor_id)
+
+    # --- IMU transform ---
+    imu_calib = calib["ImuCalibrations"][0]
+    t = np.array(imu_calib["T_Device_Imu"]["Translation"])
+    qw, (qx, qy, qz) = imu_calib["T_Device_Imu"]["UnitQuaternion"]
+    R_imu = Rotation.from_quat([qx, qy, qz, qw]).as_matrix()
+    T_device_imu = np.eye(4)
+    T_device_imu[:3, :3] = R_imu
+    T_device_imu[:3, 3] = t
+    T_imu_device = np.linalg.inv(T_device_imu)
+
+    # --- Cameras ---
+    cam_id_map = {
+        "camera-slam-left": 2,
+        "camera-slam-right": 3,
+    }
+    for cam in calib["CameraCalibrations"]:
+        #
+        label = cam["Label"]
+        if label not in cam_id_map:
+            continue
+        cam_id = cam_id_map[label]
+
+        # --- intrinsics ---
+        width = cam["ConfigData"]["ImageWidth"]
+        height = cam["ConfigData"]["ImageHeight"]
+        params = cam["Projection"]["Params"]
+        colmap_cam = pycolmap.Camera(
+            camera_id=cam_id,
+            model="PINHOLE",
+            width=width,
+            height=height,
+            params=params,
+        )
+
+        # --- camera transform ---
+        t = np.array(cam["T_Device_Camera"]["Translation"])
+        qw, (qx, qy, qz) = cam["T_Device_Camera"]["UnitQuaternion"]
+        R_cam = Rotation.from_quat([qx, qy, qz, qw]).as_matrix()
+        T_device_cam = np.eye(4)
+        T_device_cam[:3, :3] = R_cam
+        T_device_cam[:3, 3] = t
+        T_imu_cam = T_imu_device @ T_device_cam
+
+        #
+        sensor_from_rig = pycolmap.Rigid3d(T_imu_cam[:3, :]).inverse()
+        recon.add_camera(colmap_cam)
+        rig.add_sensor(colmap_cam.sensor_id, sensor_from_rig)
+
+    #
+    recon.add_rig(rig)
+    return recon
+
+
 def extract_images_from_vrs(
     vrs_file: Path,
     image_folder: Path,
@@ -264,6 +340,30 @@ def extract_images_with_timestamps_from_vrs(
     left_images = _image_names_from_folder(left_img_dir, left_img_dir)
     right_images = _image_names_from_folder(right_img_dir, right_img_dir)
     images = list(zip(left_images, right_images))
+
+    # Create a map
+    assert len(left_ts) == len(images), (
+        "timestamps should have the same length as images"
+    )
+    return dict(zip(left_ts, images))
+
+
+def parse_images_with_timestamps(
+    images_path: Path
+) -> dict[int, tuple[Path, Path]]:
+    """
+    Return timestamps -> image names
+    """
+
+    # Get images
+    left_img_dir = images_path / "left"
+    right_img_dir = images_path / "right"
+    left_images = _image_names_from_folder(left_img_dir, left_img_dir, ext=".png")
+    right_images = _image_names_from_folder(right_img_dir, right_img_dir, ext=".png")
+    images = list(zip(left_images, right_images))
+
+    # Extract timestamps from left image filenames
+    left_ts = [int(p.stem.replace("1201-1-", "")) for p in left_images]
 
     # Create a map
     assert len(left_ts) == len(images), (

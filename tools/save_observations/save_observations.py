@@ -25,13 +25,16 @@ from lamaria.structs.timed_reconstruction import TimedReconstruction
 from lamaria.structs.trajectory import Trajectory
 from lamaria.utils.aria import (
     extract_images_with_timestamps_from_vrs,
+    parse_images_with_timestamps,
     initialize_reconstruction_from_vrs_file,
+    initialize_reconstruction_from_calib_file,
 )
 
 
 # (from example_vi_optimization.py)
 def run_estimate_to_timed_recon(
     vrs: Path,
+    factory_calib: Path,
     images_path: Path,
     estimate: Path,
 ) -> TimedReconstruction:
@@ -39,10 +42,18 @@ def run_estimate_to_timed_recon(
     estimate file to a TimedReconstruction.
     """
     traj = Trajectory.load_from_file(estimate)
-    init_recon = initialize_reconstruction_from_vrs_file(vrs)
-    timestamps_to_images = extract_images_with_timestamps_from_vrs(
-        vrs, images_path
-    )
+    if args.vrs is None:
+        print("No VRS provided, skipping VRS processing, assuming images have been extracted ...")
+        init_recon = initialize_reconstruction_from_calib_file(factory_calib)
+        timestamps_to_images = parse_images_with_timestamps(
+            images_path
+        )
+    else:
+        print(f"Using VRS file: {args.vrs}")
+        init_recon = initialize_reconstruction_from_vrs_file(vrs)
+        timestamps_to_images = extract_images_with_timestamps_from_vrs(
+            vrs, images_path
+        )
     timed_recon = convert_estimate_into_timed_reconstruction(
         init_recon, traj, timestamps_to_images
     )
@@ -340,11 +351,13 @@ def run_pipeline(
     # Estimate to Lamaria Reconstruction
     image_path = output_path / "images"
     init_recon_path = output_path / "initial_recon"
+    factory_calib = output_path / "factory_calibration.json"
     if init_recon_path.exists():
         recon = TimedReconstruction.read(init_recon_path)
     else:
         recon = run_estimate_to_timed_recon(
             vrs,
+            factory_calib,
             output_path / "images",
             estimate,
         )
@@ -396,7 +409,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--vrs",
         type=str,
-        required=True,
+        required=None,
         help="Path to the input VRS file.",
     )
     parser.add_argument(
@@ -425,9 +438,10 @@ if __name__ == "__main__":
 
     options = PipelineOptions()
     options.load(args.config)
+    vrs_path = Path(args.vrs) if args.vrs is not None else None
     run_pipeline(
         options,
-        Path(args.vrs),
+        vrs_path,
         Path(args.output),
         Path(args.mps_path),
         args.trajectory_type,

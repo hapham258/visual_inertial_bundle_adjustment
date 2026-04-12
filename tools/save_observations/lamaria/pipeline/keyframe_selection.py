@@ -261,6 +261,6 @@ class KeyframeSelector:
                 src_path = images_path / subdir / image.name
                 dst_path = output / image.name
 
-                shutil.copy2(src_path, dst_path)
+                shutil.copy2(src_path, dst_path, follow_symlinks=False)
 
         return output
