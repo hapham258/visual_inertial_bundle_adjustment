@@ -22,6 +22,7 @@ class KeyframeSelectorOptions:
     max_rotation: float = 20.0  # degrees
     max_distance: float = 1.0  # meters
     max_elapsed: int = int(1e9)  # 1 second in ns
+    all_kfs: bool = False
 
     @classmethod
     def load(cls, cfg: OmegaConf | None = None) -> KeyframeSelectorOptions:

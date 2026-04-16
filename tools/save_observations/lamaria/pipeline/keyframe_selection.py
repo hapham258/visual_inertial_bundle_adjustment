@@ -53,38 +53,44 @@ class KeyframeSelector:
         init_frame_ids = sorted(self.init_recons.frames.keys())
         new_frame_id = 1
 
-        for i, (prev, curr) in enumerate(
-            zip(init_frame_ids[:-1], init_frame_ids[1:])
-        ):
-            if i == 0:
-                self.keyframe_frame_ids[new_frame_id] = prev
-                new_frame_id += 1
-                continue
-
-            current_rig_from_world = self.init_recons.frames[
-                curr
-            ].rig_from_world
-            previous_rig_from_world = self.init_recons.frames[
-                prev
-            ].rig_from_world
-            current_rig_from_previous_rig = (
-                current_rig_from_world * previous_rig_from_world.inverse()
-            )
-
-            dr_dt += np.array(
-                get_magnitude_from_transform(current_rig_from_previous_rig)
-            )
-            dts += self.timestamps[curr] - self.timestamps[prev]
-
-            if (
-                dr_dt[0] > self.options.max_rotation
-                or dr_dt[1] > self.options.max_distance
-                or dts > self.options.max_elapsed
+        if self.options.all_kfs:
+            print("Using all keyframes ...")
+            for i, frame_id in enumerate(init_frame_ids):
+                self.keyframe_frame_ids[i] = frame_id
+        else:
+            print("Downsample keyframes ...")
+            for i, (prev, curr) in enumerate(
+                zip(init_frame_ids[:-1], init_frame_ids[1:])
             ):
-                self.keyframe_frame_ids[new_frame_id] = curr
-                new_frame_id += 1
-                dr_dt = np.array([0.0, 0.0])
-                dts = 0.0
+                if i == 0:
+                    self.keyframe_frame_ids[new_frame_id] = prev
+                    new_frame_id += 1
+                    continue
+
+                current_rig_from_world = self.init_recons.frames[
+                    curr
+                ].rig_from_world
+                previous_rig_from_world = self.init_recons.frames[
+                    prev
+                ].rig_from_world
+                current_rig_from_previous_rig = (
+                    current_rig_from_world * previous_rig_from_world.inverse()
+                )
+
+                dr_dt += np.array(
+                    get_magnitude_from_transform(current_rig_from_previous_rig)
+                )
+                dts += self.timestamps[curr] - self.timestamps[prev]
+
+                if (
+                    dr_dt[0] > self.options.max_rotation
+                    or dr_dt[1] > self.options.max_distance
+                    or dts > self.options.max_elapsed
+                ):
+                    self.keyframe_frame_ids[new_frame_id] = curr
+                    new_frame_id += 1
+                    dr_dt = np.array([0.0, 0.0])
+                    dts = 0.0
 
     def _build_device_keyframed_reconstruction(self):
         old_rig = self.init_recons.rigs[1]

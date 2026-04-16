@@ -1,12 +1,13 @@
 #!/bin/bash
 
-BASE="/media/hapq/LDATA/dense_mapping_zedx_mini/dataset_2026-04-01_17-21-00/dso"
+PARENT_PATH="/home/hapq/Desktop/viba_stuff"
+BASE="/media/hapq/LDATA/dense_mapping/zedx_mini/dataset_2026-04-01_17-21-00/dso"
 
 SRC_LEFT="$BASE/cam0"
 SRC_RIGHT="$BASE/cam1"
 
-DST_LEFT="left"
-DST_RIGHT="right"
+DST_LEFT="$PARENT_PATH/viba_input/images/left"
+DST_RIGHT="$PARENT_PATH/viba_input/images/right"
 
 PREFIX_LEFT="1201-1-"
 PREFIX_RIGHT="1201-2-"
