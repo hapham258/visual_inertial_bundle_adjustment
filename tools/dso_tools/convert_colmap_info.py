@@ -5,8 +5,8 @@ from read_write_model import read_images_binary, read_cameras_binary
 
 parent_path = "/home/hapq/Desktop/viba_stuff/"
 input_path = parent_path + "viba_input/triangulated/model_ba/"
-pose_file = parent_path + "viba_input/triangulated/model_ba/poses_opt.txt"
-intr_file = parent_path + "viba_input/triangulated/model_ba/intrinsics_opt.txt"
+pose_file = parent_path + "viba_input/triangulated/model_ba/poses.txt"
+intr_file = parent_path + "viba_input/triangulated/model_ba/intrinsics.txt"
 
 images = read_images_binary(os.path.join(input_path, "images.bin"))
 cameras = read_cameras_binary(os.path.join(input_path, "cameras.bin"))

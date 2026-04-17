@@ -18,6 +18,41 @@ cd tools/save_observations
 pip install -r requirements.txt
 cd ../../
 ```
+To run VIBA on DSO's outputs, follow these steps:
+1. Generate symlinks from the dataset:
+```
+./tools/dso_tools/gen_symlinks.sh
+```
+2. Copy `poses.txt` and `intrinsics.txt` files from `map_fmt`, `viba_bias.txt` and `viba_vel.txt` from `results`, `imu.yaml` and `stereo.txt` from `configs` to `viba_input\dso_output` directory.
+3. Run these scripts to generate VIBA-compatible input files:
+```
+python tools/dso_tools/convert_imu.py
+python tools/dso_tools/convert_online_calib.py
+python tools/dso_tools/convert_open_loop_traj.py
+```
+4. Set up environment variables:
+```
+export VIBA_INPUT_DIR=/home/hapq/Desktop/viba_stuff/viba_input
+export MPS_DATA=$VIBA_INPUT_DIR
+export OUTPUT_DIR=/home/hapq/Desktop/viba_stuff/viba_output
+```
+5. Record observations:
+```
+cd tools/save_observations
+python -m save_observations --output $VIBA_INPUT_DIR --mps-path $MPS_DATA --trajectory-type open_loop
+cd ../../
+```
+6. Run the main VIBA with GUI:
+```
+build/interfaces/ark/ark_vi_ba_gui -i $VIBA_INPUT_DIR -o $OUTPUT_DIR
+```
+7. Generate the DSO-compatible outputs:
+```
+python tools/dso_tools/extract_opt_poses.py
+python tools/dso_tools/extract_opt_intrinsics.py
+```
+Then `poses.txt` and `intrinsics.txt` in `viba_output` directory are the refined versions of those in `viba_input/dso_output` directory.
+
 
 [![CI](https://github.com/facebookresearch/visual_inertial_bundle_adjustment/actions/workflows/ci.yml/badge.svg)](https://github.com/facebookresearch/visual_inertial_bundle_adjustment/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/facebookresearch/visual_inertial_bundle_adjustment/blob/main/LICENSE)

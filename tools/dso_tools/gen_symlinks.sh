@@ -13,7 +13,6 @@ PREFIX_LEFT="1201-1-"
 PREFIX_RIGHT="1201-2-"
 
 mkdir -p "$DST_LEFT" "$DST_RIGHT"
-
 for f in "$SRC_LEFT"/*.png; do
     filename=$(basename "$f")
     ts="${filename%.png}"
@@ -24,3 +23,7 @@ for f in "$SRC_LEFT"/*.png; do
     ln -sf "$SRC_LEFT/$filename" "$DST_LEFT/$left_name"
     ln -sf "$SRC_RIGHT/$filename" "$DST_RIGHT/$right_name"
 done
+
+mkdir -p "$PARENT_PATH/viba_input/dso_output"
+ln -sf "$BASE/imu.txt" "$PARENT_PATH/viba_input/dso_output/imu.txt"
+ln -sf "$BASE/imu_orig.txt" "$PARENT_PATH/viba_input/dso_output/imu_orig.txt"

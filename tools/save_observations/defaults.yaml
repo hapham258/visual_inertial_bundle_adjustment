@@ -2,7 +2,7 @@ keyframing:
   max_rotation: 20.0
   max_distance: 1.0
   max_elapsed: 1e9 # 1 second in ns
-  all_kfs: True
+  all_kfs: False
 
 triangulation:
   feature_conf: aliked-n16

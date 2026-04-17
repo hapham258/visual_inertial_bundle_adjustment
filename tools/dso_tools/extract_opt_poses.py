@@ -3,7 +3,7 @@ import csv
 parent_path = "/home/hapq/Desktop/viba_stuff/"
 file1 = parent_path + "viba_output/closed_loop_framerate_trajectory.csv"
 file2 = parent_path + "viba_input/dso_output/poses.txt"
-output = parent_path + "viba_output/poses_opt.txt"
+output = parent_path + "viba_output/poses.txt"
 
 # --- load timestamps from file2 ---
 timestamps = set()

@@ -1,5 +1,4 @@
-import math
-import shutil
+import os
 
 parent_path = "/home/hapq/Desktop/viba_stuff/"
 input_file = (
@@ -33,5 +32,5 @@ with open(input_file, "r") as fin, open(output_file, "w") as fout:
         # Write output (temperature = nan)
         fout.write(f"{timestamp}, nan, {wx}, {wy}, {wz}, {ax}, {ay}, {az}\n")
 
-shutil.copyfile(output_file, output_file_right)
+os.symlink(output_file, output_file_right)
 print("Conversion done!")
