@@ -39,6 +39,8 @@ with open(file1, "r") as f1, open(output, "w") as fout:
         qw = float(row["qw_world_device"])
 
         # write in required format
-        fout.write(f"{ts_ns} {tx} {ty} {tz} {qw} {qx} {qy} {qz}\n")
+        fout.write(
+            f"{ts_ns} {tx:.10f} {ty:.10f} {tz:.10f} {qw:.10f} {qx:.10f} {qy:.10f} {qz:.10f}\n"
+        )
 
 print("Done.")

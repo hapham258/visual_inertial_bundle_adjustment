@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import shutil
+import cv2
 from copy import deepcopy
 from pathlib import Path
+from tqdm import tqdm
 
 import numpy as np
 import pycolmap
@@ -41,7 +43,7 @@ class KeyframeSelector:
 
         selector = KeyframeSelector(options, data)
         kf_recon = selector.run_keyframing()
-        selector.copy_images_to_keyframes_dir(images_path, keyframes_path)
+        selector.copy_images_to_keyframes_dir(images_path, keyframes_path, kf_recon.get_image_size())
 
         return kf_recon
 
@@ -240,6 +242,7 @@ class KeyframeSelector:
         self,
         images_path: Path,
         output: Path,
+        recon_size: tuple[int, int],  # (width, height)
     ) -> Path:
         """Copy images corresponding to
         keyframes to a separate directory.
@@ -258,15 +261,46 @@ class KeyframeSelector:
 
         output.mkdir(parents=True, exist_ok=True)
 
+        target_w, target_h = recon_size
+
+        # Precompute total number of images
+        total_images = 0
         for _, frame_id in self.keyframe_frame_ids.items():
             frame = self.init_recons.frames[frame_id]
-            for data_id in frame.data_ids:
-                image = self.init_recons.images[data_id.id]
+            total_images += len(frame.data_ids)
 
-                subdir = "left" if image.name.startswith("1201-1") else "right"
-                src_path = images_path / subdir / image.name
-                dst_path = output / image.name
+        with tqdm(total=total_images, desc="Copying (possibly scaling) the keyframes") as pbar:
+            for _, frame_id in self.keyframe_frame_ids.items():
+                frame = self.init_recons.frames[frame_id]
 
-                shutil.copy2(src_path, dst_path, follow_symlinks=False)
+                for data_id in frame.data_ids:
+                    image = self.init_recons.images[data_id.id]
+
+                    subdir = "left" if image.name.startswith("1201-1") else "right"
+                    src_path = images_path / subdir / image.name
+                    dst_path = output / image.name
+
+                    src_img = cv2.imread(str(src_path), cv2.IMREAD_UNCHANGED)
+                    if src_img is None:
+                        print(f"[WARN] Failed to read {src_path}")
+                        pbar.update(1)
+                        continue
+
+                    h, w = src_img.shape[:2]
+
+                    if (w, h) == (target_w, target_h):
+                        shutil.copy2(src_path, dst_path, follow_symlinks=False)
+                    else:
+                        dst_img = cv2.resize(
+                            src_img,
+                            (target_w, target_h),
+                            interpolation=cv2.INTER_AREA,
+                        )
+
+                        success = cv2.imwrite(str(dst_path), dst_img)
+                        if not success:
+                            print(f"[WARN] Failed to write {dst_path}")
+
+                    pbar.update(1)
 
         return output

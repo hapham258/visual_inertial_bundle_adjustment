@@ -51,3 +51,24 @@ class TimedReconstruction:
             f.write("# FrameID Timestamp(ns)\n")
             for frame_id in frame_ids:
                 f.write(f"{frame_id} {self.timestamps[frame_id]}\n")
+
+    def get_image_size(self) -> tuple[int, int]:
+        cams = self.reconstruction.cameras
+
+        # keep only valid image cameras
+        valid_cams = [
+            c for c in cams.values()
+            if c.width > 0 and c.height > 0
+        ]
+
+        if len(valid_cams) == 0:
+            raise ValueError("No valid image cameras found")
+
+        cam = valid_cams[0]
+
+        # sanity check
+        for c in valid_cams:
+            if c.width != cam.width or c.height != cam.height:
+                raise ValueError("Cameras have inconsistent image sizes")
+
+        return cam.width, cam.height
