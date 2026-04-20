@@ -1,12 +1,13 @@
 import csv
+import os
 
-parent_path = "/home/hapq/Desktop/viba_stuff/"
+parent_path = os.getenv("PARENT_PATH")
 pose_file = (
-    parent_path + "viba_input/dso_output/poses.txt"
+    parent_path + "/viba_input/dso_output/poses.txt"
 )  # From formatted map directory
-vel_file = parent_path + "viba_input/dso_output/viba_vel.txt"  # From result directory
-imu_file = parent_path + "viba_input/dso_output/imu.txt"  # From raw data directory
-output_file = parent_path + "viba_input/open_loop_trajectory.csv"
+vel_file = parent_path + "/viba_input/dso_output/viba_vel.txt"  # From result directory
+imu_file = parent_path + "/viba_input/dso_output/imu.txt"  # From raw data directory
+output_file = parent_path + "/viba_input/open_loop_trajectory.csv"
 
 vel_dict = {}
 with open(vel_file, "r") as f:

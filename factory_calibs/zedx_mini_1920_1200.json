@@ -1,0 +1,258 @@
+{
+  "AlgorithmName": "RealCalib",
+  "AlgorithmVersion": "1.0 Beta",
+  "CalibrationSource": "Unknown",
+  "CameraCalibrations": [
+    {
+      "Calibrated": true,
+      "ConfigData": {
+        "ImageHeight": 1200,
+        "ImageWidth": 1920,
+        "MaxSolidAngle": 3.141592653589793
+      },
+      "Label": "camera-slam-left",
+      "Projection": {
+        "Description": "fx, fy, cx, cy",
+        "Name": "Linear",
+        "Params": [
+          749.8759765625,
+          749.8759765625,
+          988.2882080078125,
+          572.5521240234375
+        ]
+      },
+      "SerialNumber": "0072510f1b2104050900000614170001",
+      "T_Device_Camera": {
+        "Translation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "UnitQuaternion": [
+          1.0,
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "Calibrated": true,
+      "ConfigData": {
+        "ImageHeight": 1200,
+        "ImageWidth": 1920,
+        "MaxSolidAngle": 3.141592653589793
+      },
+      "Label": "camera-slam-right",
+      "Projection": {
+        "Description": "fx, fy, cx, cy",
+        "Name": "Linear",
+        "Params": [
+          749.8759765625,
+          749.8759765625,
+          988.2882080078125,
+          572.5521240234375
+        ]
+      },
+      "SerialNumber": "0072510f1b2107010800000c0d220001",
+      "T_Device_Camera": {
+        "Translation": [
+          0.049812,
+          0.0,
+          0.0
+        ],
+        "UnitQuaternion": [
+          1.0,
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      }
+    }
+  ],
+  "DeviceClassInfo": {
+    "BuildVersion": "DVT-S",
+    "DeviceClass": "Aria"
+  },
+  "FileFormat": {
+    "Tags": [],
+    "Timestamp": "",
+    "UnixTime": 0,
+    "Version": 3
+  },
+  "ImuCalibrations": [
+    {
+      "Accelerometer": {
+        "Bias": {
+          "Name": "Constant",
+          "Offset": [
+            0.224,
+            0.224,
+            0.224
+          ]
+        },
+        "Model": {
+          "Name": "UpperTriagonalLinear",
+          "RectificationMatrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        "TimeOffsetSec_Device_Accel": 0.0
+      },
+      "Calibrated": true,
+      "Gyroscope": {
+        "Bias": {
+          "Name": "Constant",
+          "Offset": [
+            0.01280,
+            0.01280,
+            0.01280
+          ]
+        },
+        "Model": {
+          "Name": "Linear",
+          "RectificationMatrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        "TimeOffsetSec_Device_Gyro": 0.0
+      },
+      "Label": "imu-left",
+      "SerialNumber": "",
+      "T_Device_Imu": {
+        "Translation": [
+          0.034502,
+          0.004356,
+          0.000000
+        ],
+        "UnitQuaternion": [
+          0.999994,
+          [
+            0.0010398,
+            0.000597,
+            -0.0032488
+          ]
+        ]
+      }
+    },
+    {
+      "Accelerometer": {
+        "Bias": {
+          "Name": "Constant",
+          "Offset": [
+            0.224,
+            0.224,
+            0.224
+          ]
+        },
+        "Model": {
+          "Name": "UpperTriagonalLinear",
+          "RectificationMatrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        "TimeOffsetSec_Device_Accel": 0.0
+      },
+      "Calibrated": true,
+      "Gyroscope": {
+        "Bias": {
+          "Name": "Constant",
+          "Offset": [
+            0.01280,
+            0.01280,
+            0.01280
+          ]
+        },
+        "Model": {
+          "Name": "Linear",
+          "RectificationMatrix": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        "TimeOffsetSec_Device_Gyro": 0.0
+      },
+      "Label": "imu-right",
+      "SerialNumber": "",
+      "T_Device_Imu": {
+        "Translation": [
+          0.034502,
+          0.004356,
+          0.000000
+        ],
+        "UnitQuaternion": [
+          0.999994,
+          [
+            0.0010398,
+            0.000597,
+            -0.0032488
+          ]
+        ]
+      }
+    }
+  ],
+  "OriginSpecification": {
+    "ChildLabel": "camera-slam-left",
+    "Type": "Custom"
+  },
+  "Serial": ""
+}

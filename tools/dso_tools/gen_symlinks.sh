@@ -1,6 +1,5 @@
 #!/bin/bash
 
-PARENT_PATH="/home/hapq/Desktop/viba_stuff"
 BASE="/media/hapq/LDATA/dense_mapping/zedx_mini/dataset_2026-04-01_17-21-00/dso"
 
 SRC_LEFT="$BASE/cam0"

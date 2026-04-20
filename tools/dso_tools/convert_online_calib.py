@@ -1,20 +1,21 @@
+import os
 import json
 import yaml
 import numpy as np
 from scipy.spatial.transform import Rotation as Rot
 
-parent_path = "/home/hapq/Desktop/viba_stuff/"
+parent_path = os.getenv("PARENT_PATH")
 calib_file = (
-    parent_path + "viba_input/dso_output/intrinsics.txt"
+    parent_path + "/viba_input/dso_output/intrinsics.txt"
 )  # From configuration directory
 stereo_file = (
-    parent_path + "viba_input/dso_output/stereo.txt"
+    parent_path + "/viba_input/dso_output/stereo.txt"
 )  # From configuration directory
 imu_file = (
-    parent_path + "viba_input/dso_output/imu.yaml"
+    parent_path + "/viba_input/dso_output/imu.yaml"
 )  # From configuration directory
-bias_file = parent_path + "viba_input/dso_output/viba_bias.txt"  # From result directory
-output_file = parent_path + "viba_input/online_calibration.jsonl"
+bias_file = parent_path + "/viba_input/dso_output/viba_bias.txt"  # From result directory
+output_file = parent_path + "/viba_input/online_calibration.jsonl"
 
 
 def compute_lr_transform_from_file(stereo_file):

@@ -1,11 +1,11 @@
 import os
 
-parent_path = "/home/hapq/Desktop/viba_stuff/"
+parent_path = os.getenv("PARENT_PATH")
 input_file = (
-    parent_path + "viba_input/dso_output/imu_orig.txt"
+    parent_path + "/viba_input/dso_output/imu_orig.txt"
 )  # From raw data directory
-output_file = parent_path + "viba_input/imu_samples_imu-left.csv"
-output_file_right = parent_path + "viba_input/imu_samples_imu-right.csv"
+output_file = parent_path + "/viba_input/imu_samples_imu-left.csv"
+output_file_right = parent_path + "/viba_input/imu_samples_imu-right.csv"
 
 with open(input_file, "r") as fin, open(output_file, "w") as fout:
     # Write new header

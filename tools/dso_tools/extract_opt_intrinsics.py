@@ -1,9 +1,10 @@
 import json
+import os
 
-parent_path = "/home/hapq/Desktop/viba_stuff/"
-file1 = parent_path + "viba_output/online_calibration.jsonl"
-file2 = parent_path + "viba_input/dso_output/intrinsics.txt"
-output = parent_path + "viba_output/intrinsics.txt"
+parent_path = os.getenv("PARENT_PATH")
+file1 = parent_path + "/viba_output/online_calibration.jsonl"
+file2 = parent_path + "/viba_input/dso_output/intrinsics.txt"
+output = parent_path + "/viba_output/intrinsics.txt"
 
 # --- load timestamps from file2 ---
 timestamps = set()

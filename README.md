@@ -21,9 +21,10 @@ cd ../../
 To run VIBA on DSO's outputs, follow these steps:
 1. Generate symlinks from the dataset:
 ```
+export PARENT_PATH=$(pwd)
 ./tools/dso_tools/gen_symlinks.sh
 ```
-2. Copy `poses.txt` and `intrinsics.txt` files from `map_fmt`, `viba_bias.txt` and `viba_vel.txt` from `results`, `imu.yaml` and `stereo.txt` from `configs` to `viba_input\dso_output` directory.
+2. Copy `poses.txt` and `intrinsics.txt` files from `map_fmt`, `viba_bias.txt` and `viba_vel.txt` from `results`, `imu.yaml` and `stereo.txt` from `configs`, `factory_calibration.json` from `factory_calibs` to `viba_input\dso_output` directory.
 3. Run these scripts to generate VIBA-compatible input files:
 ```
 python tools/dso_tools/convert_imu.py
@@ -32,9 +33,9 @@ python tools/dso_tools/convert_open_loop_traj.py
 ```
 4. Set up environment variables:
 ```
-export VIBA_INPUT_DIR=/home/hapq/Desktop/viba_stuff/viba_input
+export VIBA_INPUT_DIR=$PARENT_PATH/viba_input
 export MPS_DATA=$VIBA_INPUT_DIR
-export OUTPUT_DIR=/home/hapq/Desktop/viba_stuff/viba_output
+export OUTPUT_DIR=$PARENT_PATH/viba_output
 ```
 5. Record observations:
 ```

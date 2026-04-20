@@ -3,3 +3,5 @@ build
 .pixi
 pixi.lock
 *.pyc
+viba_input/
+viba_output/
