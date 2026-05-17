@@ -19,7 +19,8 @@ with open(vel_file, "r") as f:
         ts = int(parts[0])
         vx, vy, vz = map(float, parts[1:4])
         wx, wy, wz = map(float, parts[4:7])
-        gx, gy, gz = map(float, parts[7:10])
+        # gx, gy, gz = map(float, parts[7:10])
+        gx, gy, gz = 0, 0, -9.8082
         vel_dict[ts] = (vx, vy, vz, wx, wy, wz, gx, gy, gz)
 
 imu_dict = {}
