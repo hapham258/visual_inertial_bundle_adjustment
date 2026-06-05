@@ -7,6 +7,7 @@ import pycolmap
 from hloc import (
     extract_features,
     match_features,
+    match_dense,
     pairs_from_retrieval,
     triangulation,
 )
@@ -107,7 +108,10 @@ def run(
 
     retrieval_conf = extract_features.confs[options.retrieval_conf]
     feature_conf = extract_features.confs[options.feature_conf]
-    matcher_conf = match_features.confs[options.matcher_conf]
+    if options.matcher_conf.startswith("loftr"):
+        matcher_conf = match_dense.confs[options.matcher_conf]
+    else:
+        matcher_conf = match_features.confs[options.matcher_conf]
 
     logger.info(
         "HLOC confs: retrieval=%s, features=%s, matcher=%s",
@@ -128,21 +132,35 @@ def run(
     )
     postprocess_pairs_with_reconstruction(pairs_path, reference_model)
 
-    matches_path = match_features.main(
-        conf=matcher_conf,
-        pairs=pairs_path,
-        features=feature_conf["output"],
-        export_dir=hloc_output_path,
-    )
+    if options.matcher_conf.startswith("loftr"):
+        features_path_dense, matches_path = match_dense.main(
+            conf=matcher_conf,
+            pairs=pairs_path,
+            image_dir=keyframes_path,
+            features=feature_conf["output"],
+            export_dir=hloc_output_path,
+        )
+    else:
+        matches_path = match_features.main(
+            conf=matcher_conf,
+            pairs=pairs_path,
+            features=feature_conf["output"],
+            export_dir=hloc_output_path,
+        )
 
     colmap_opts = get_colmap_triangulation_options(options)
 
+    triangulation_features = (
+        features_path_dense
+        if features_path_dense is not None
+        else features_path
+    )
     _ = triangulation.main(
         sfm_dir=triangulated_model_path,
         reference_model=reference_model,
         image_dir=keyframes_path,
         pairs=pairs_path,
-        features=features_path,
+        features=triangulation_features,
         matches=matches_path,
         mapper_options=colmap_opts,
     )
