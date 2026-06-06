@@ -123,9 +123,6 @@ def run(
     retrieval_path = extract_features.main(
         retrieval_conf, image_dir=keyframes_path, export_dir=hloc_output_path
     )
-    features_path = extract_features.main(
-        feature_conf, image_dir=keyframes_path, export_dir=hloc_output_path
-    )
 
     pairs_from_retrieval.main(
         retrieval_path, pairs_path, options.num_retrieval_matches
@@ -133,14 +130,16 @@ def run(
     postprocess_pairs_with_reconstruction(pairs_path, reference_model)
 
     if options.matcher_conf.startswith("loftr"):
-        features_path_dense, matches_path = match_dense.main(
+        features_path, matches_path = match_dense.main(
             conf=matcher_conf,
             pairs=pairs_path,
             image_dir=keyframes_path,
-            features=feature_conf["output"],
             export_dir=hloc_output_path,
         )
     else:
+        features_path = extract_features.main(
+            feature_conf, image_dir=keyframes_path, export_dir=hloc_output_path
+        )
         matches_path = match_features.main(
             conf=matcher_conf,
             pairs=pairs_path,
@@ -150,17 +149,12 @@ def run(
 
     colmap_opts = get_colmap_triangulation_options(options)
 
-    triangulation_features = (
-        features_path_dense
-        if features_path_dense is not None
-        else features_path
-    )
     _ = triangulation.main(
         sfm_dir=triangulated_model_path,
         reference_model=reference_model,
         image_dir=keyframes_path,
         pairs=pairs_path,
-        features=triangulation_features,
+        features=features_path,
         matches=matches_path,
         mapper_options=colmap_opts,
     )
