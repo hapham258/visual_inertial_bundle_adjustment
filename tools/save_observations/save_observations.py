@@ -84,14 +84,6 @@ def run_triangulation(
     keyframes_path: Path,
     triangulation_path: Path,
 ) -> pycolmap.Reconstruction:
-    triangulated_model_path = triangulation_path / "sfm"
-    if (
-        (triangulated_model_path / "cameras.bin").exists()
-        and (triangulated_model_path / "images.bin").exists()
-        and (triangulated_model_path / "points3D.bin").exists()
-    ):
-        print(f"Using existing triangulation: {triangulated_model_path}")
-        return pycolmap.Reconstruction(triangulated_model_path)
     triangulated_model_path = triangulate(
         options,
         reference_model_path,
