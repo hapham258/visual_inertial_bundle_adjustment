@@ -257,7 +257,7 @@ class KeyframeSelector:
             )
 
         if output.exists() and any(output.iterdir()):
-            shutil.rmtree(output)
+            return output
 
         output.mkdir(parents=True, exist_ok=True)
 
