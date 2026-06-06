@@ -10,6 +10,7 @@ from pathlib import Path
 import pandas as pd
 import pycolmap
 from tqdm import tqdm
+import shutil
 
 from lamaria.config.options import (
     KeyframeSelectorOptions,
@@ -83,6 +84,14 @@ def run_triangulation(
     keyframes_path: Path,
     triangulation_path: Path,
 ) -> pycolmap.Reconstruction:
+    triangulated_model_path = triangulation_path / "sfm"
+    if (
+        (triangulated_model_path / "cameras.bin").exists()
+        and (triangulated_model_path / "images.bin").exists()
+        and (triangulated_model_path / "points3D.bin").exists()
+    ):
+        print(f"Using existing triangulation: {triangulated_model_path}")
+        return pycolmap.Reconstruction(triangulated_model_path)
     triangulated_model_path = triangulate(
         options,
         reference_model_path,
@@ -446,7 +455,7 @@ if __name__ == "__main__":
         Path(args.mps_path),
         args.trajectory_type,
     )
-    
+
     output_path = Path(args.output)
     output_path.mkdir(parents=True, exist_ok=True)
-    options.save(output_path / "config.yaml")
+    shutil.copy(args.config, output_path / "config.yaml")
