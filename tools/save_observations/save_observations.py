@@ -446,3 +446,7 @@ if __name__ == "__main__":
         Path(args.mps_path),
         args.trajectory_type,
     )
+    
+    output_path = Path(args.output)
+    output_path.mkdir(parents=True, exist_ok=True)
+    options.save(output_path / "config.yaml")

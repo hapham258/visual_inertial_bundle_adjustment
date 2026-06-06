@@ -24,7 +24,7 @@ To run VIBA on DSO's outputs, follow these steps:
 export PARENT_PATH=$(pwd)
 ./tools/dso_tools/gen_symlinks.sh
 ```
-2. Copy `poses.txt` and `intrinsics.txt` files from `map_fmt`, `viba_bias.txt` and `viba_vel.txt` from `results`, `imu.yaml` and `stereo.txt` from `configs`, `factory_calibration.json` from `factory_calibs` to `viba_input\dso_output` directory.
+2. Copy `poses.txt` and `intrinsics.txt` files from `map_fmt`, `viba_bias.txt` and `viba_vel.txt` from `results`, `imu.yaml` and `stereo.txt` from `configs`, `factory_calibration.json` from `factory_calibs` to `viba_input/dso_output` directory.
 3. Run these scripts to generate VIBA-compatible input files:
 ```
 python tools/dso_tools/convert_imu.py
