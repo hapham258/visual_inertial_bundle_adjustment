@@ -383,6 +383,7 @@ def run_pipeline(
     if tri_model_path.exists():
         recon = TimedReconstruction.read(tri_model_path)
     else:
+        print(f"Using existing triangulation: {tri_model_path}")
         pycolmap_recon = run_triangulation(
             options.triangulator_options,
             keyframed_recon_path,
