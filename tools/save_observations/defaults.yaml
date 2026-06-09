@@ -2,12 +2,12 @@ keyframing:
   max_rotation: 20.0
   max_distance: 1.0
   max_elapsed: 1e9 # 1 second in ns
-  all_kfs: False
+  all_kfs: True
 
 triangulation:
-  feature_conf: aliked-n16
-  matcher_conf: aliked+lightglue
-  retrieval_conf: netvlad
+  feature_conf: superpoint_max
+  matcher_conf: superpoint+lightglue
+  retrieval_conf: megaloc
   num_retrieval_matches: 5
 
   # relaxed triangulation
