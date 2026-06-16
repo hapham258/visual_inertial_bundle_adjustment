@@ -10,4 +10,4 @@ tqdm
 ruff==0.12.7
 pycolmap==3.13.0
 
--e git+https://github.com/cvg/Hierarchical-Localization.git@1252817#egg=hloc
+-e git+https://github.com/hapham258/Hierarchical-Localization.git@qha_test#egg=hloc
